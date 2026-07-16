@@ -93,8 +93,18 @@ The skill prefers `just-bash` for:
 - user-provided snippets that should be inspected first
 - command chains with pipes, redirects, loops, conditionals, or broad filesystem effects
 - dry-runs before potentially destructive shell operations
+- read-only exploration whose raw output would otherwise flood the conversation — reduce it in the sandbox (`grep`, `jq`, `head`, `wc`) and return only what matters
 
 It keeps normal shell execution for project tooling that must touch the real repo, such as test, lint, build, and language-specific verification commands.
+
+## Why just-bash (and where this fits)
+
+`just-bash` ([vercel-labs/just-bash](https://github.com/vercel-labs/just-bash)) is a bash-like interpreter with a virtual, overlay filesystem. There are two distinct ways to adopt it, and this project targets only the first:
+
+- **Safety layer for coding agents (this project).** Steer agents such as GitHub Copilot, Codex, and Claude Code to dry-run generated or untrusted shell in the sandbox before touching the real host. Delivered as a workflow skill plus agent instructions — no code changes to your app.
+- **Workbench layer for product agents.** Embed the `just-bash` *library* directly in an application agent so it can keep raw artifacts out of the model context, reduce them, and return a small decision packet. Brex describes this pattern — moving one audit agent to a `just-bash` workbench cut P90 token usage from ~3M to ~600–700k and roughly halved P95 latency ([post](https://x.com/brexHQ/status/2077063945085415655), [benchmark repo](https://github.com/herculesggimenes/bash-sandbox-benchmarks)).
+
+Both use the same tool for different goals. This project is the safety layer: it steers agents toward the `just-bash` CLI as a one-shot sandbox. It does **not** provide the persistent, in-process workbench from the product-agent pattern — CLI runs are isolated and their overlay writes are discarded after each invocation. If you want the workbench behavior (files as memory, state carried across steps), embed the `just-bash` library in your own agent loop instead.
 
 ## Repository Layout
 

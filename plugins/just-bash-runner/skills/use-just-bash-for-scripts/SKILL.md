@@ -13,11 +13,13 @@ This skill steers execution; it does not override higher-priority system, develo
 
 1. Classify the command:
    - Use `just-bash` first for shell snippets, generated scripts, loops, conditionals, pipes, redirects, heredocs, `find ... -exec`, `xargs`, or commands with potentially broad filesystem effects.
+   - Use `just-bash` as a context filter for read-only exploration that would otherwise dump large output into the conversation: reduce it inside the sandbox with `grep`, `head`, `awk`, `jq`, `wc`, `sort | uniq -c`, and report only the rows that matter instead of the full payload.
    - Use the normal shell directly for project tooling that must affect the real repo, such as `npm test`, `pnpm build`, `composer test`, `php -l`, `git diff`, or language-specific test/lint commands.
    - Ask before destructive host actions, even if `just-bash` would make them copy-on-write.
 2. Prefer a sandboxed dry-run. If `just-bash` is not installed globally, invoke it with `npx just-bash` (no install step required):
    - For inline scripts, run `npx just-bash -c '<script>' --root <workspace-root> --json` (or `just-bash -c ...` when installed globally).
    - For script files, run `npx just-bash <script-path> --root <workspace-root> --json`.
+   - The sandbox is read-only by default; add `--allow-write` for scripts that must create, edit, or delete files (writes stay in memory and are discarded).
    - Add `-e` (`--errexit`) when the script should stop at the first failing command.
    - Remember that the real project is mounted inside just-bash at `/home/user/project`; use that path or relative paths from its default cwd.
 3. Interpret the result:
@@ -43,21 +45,36 @@ Prefer `npx just-bash` for risky scripts rather than silently falling back to th
 
 ## Safety Notes
 
-- The just-bash CLI uses an overlay filesystem: reads come from the real project root, while writes stay in memory and are discarded after execution.
+- The just-bash CLI is read-only by default: reads come from the real project root, and writes fail with `EROFS` unless you pass `--allow-write`. With `--allow-write`, writes go to an in-memory overlay and are discarded after execution, so the real host is never modified. Read-only exploration (grep/jq/wc) needs no flag; add `--allow-write` only to dry-run scripts that must create, edit, or delete files.
+- Each CLI invocation is a fresh sandbox; overlay writes do not persist to the next call. Do the fetch-and-filter within a single invocation (pipe or a scratch file inside one `-c` script), rather than relying on state carried across separate calls.
 - Network access is disabled by default unless configured in just-bash.
 - Python and JavaScript runtimes are optional capabilities in just-bash and may not be available through the CLI setup.
 - Do not present just-bash as a perfect security boundary. It runs without VM isolation and reduces host side effects for suitable shell scripts, but it does not replace the agent's own sandboxing, approvals, dependency review, or user confirmation for destructive work.
 
 ## Useful Patterns
 
+Reduce large output inside the sandbox and return only what matters, instead of dumping the full payload into the conversation (read-only, no flag needed):
+
 ```bash
-npx just-bash -c 'grep -r "TODO" src/ | head' --root /path/to/project --json
+npx just-bash -c 'grep -rn "apiKey" src | wc -l' --root /path/to/project --json
 ```
 
 ```bash
-npx just-bash ./scripts/example.sh --root /path/to/project --json
+npx just-bash -c 'cat data/report.json | jq "[.items[] | select(.status==\"error\")] | length"' --root /path/to/project --json
+```
+
+Fetch once into a scratch file and run several queries in the same invocation (writes need `--allow-write` and are discarded afterwards):
+
+```bash
+npx just-bash -c 'find . -name "*.log" > logs.txt; wc -l < logs.txt; head -5 logs.txt' --root /path/to/project --allow-write --json
+```
+
+Dry-run a script or a potentially destructive command before touching the real host (writes stay in memory with `--allow-write`; the host is unchanged):
+
+```bash
+npx just-bash ./scripts/example.sh --root /path/to/project --allow-write --json
 ```
 
 ```bash
-printf '%s\n' 'find . -name "*.tmp" -delete' | npx just-bash --root /path/to/project --json
+printf '%s\n' 'find . -name "*.tmp" -delete' | npx just-bash --root /path/to/project --allow-write --json
 ```

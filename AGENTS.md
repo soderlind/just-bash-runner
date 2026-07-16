@@ -33,8 +33,8 @@ npx just-bash -c '<script>' --root <workspace-root> --json
 npx just-bash <script-path> --root <workspace-root> --json
 ```
 
-Add `-e` (`--errexit`) when the script should stop at the first failing command.
+Add `-e` (`--errexit`) when the script should stop at the first failing command. The sandbox is read-only by default; add `--allow-write` for scripts that must create, edit, or delete files.
 
-The just-bash CLI mounts the project at `/home/user/project`. Reads come from the real project root, while writes stay in the overlay and are discarded after execution. It runs without VM isolation, so it reduces host side effects but is not a full security boundary.
+The just-bash CLI mounts the project at `/home/user/project`. Reads come from the real project root. It is read-only by default (writes fail with `EROFS`); with `--allow-write`, writes go to an in-memory overlay and are discarded after execution, so the real host is never modified. It also works well as a context filter — reduce large output in the sandbox (`grep`, `jq`, `head`, `wc`) and return only what matters instead of dumping it into the conversation. It runs without VM isolation, so it reduces host side effects but is not a full security boundary.
 
 This instruction steers behavior; it does not override system instructions, approval rules, user confirmation for destructive actions, or the client runtime sandbox.
