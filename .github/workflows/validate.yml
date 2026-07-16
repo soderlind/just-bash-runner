@@ -1,0 +1,22 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate package (JSON, skill frontmatter, agent-neutral)
+        run: node scripts/validate.mjs
+      # Network smoke test against the skills installer. Non-blocking so a
+      # skills.sh outage cannot red the build; the check above is the gate.
+      - name: Assert the skill is discoverable by the skills installer
+        continue-on-error: true
+        run: npx -y skills@latest add "$GITHUB_REPOSITORY" --list

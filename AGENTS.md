@@ -11,22 +11,30 @@ Use `just-bash` first for:
 
 Use the normal shell directly for project tooling that must affect the real repo, such as tests, lint, build commands, `git diff`, language-specific verification, and package-manager scripts.
 
-Before relying on the CLI, check:
+Before relying on the CLI, check availability. It runs with no install step via `npx`:
 
 ```bash
-command -v just-bash
+npx just-bash -c 'echo ready' --json
 ```
 
-Useful dry-run forms:
+For an always-available binary, install it globally instead:
 
 ```bash
-just-bash -c '<script>' --root <workspace-root> --json
+command -v just-bash || npm install -g just-bash
+```
+
+Useful dry-run forms (drop the `npx` prefix when installed globally):
+
+```bash
+npx just-bash -c '<script>' --root <workspace-root> --json
 ```
 
 ```bash
-just-bash <script-path> --root <workspace-root> --json
+npx just-bash <script-path> --root <workspace-root> --json
 ```
 
-The just-bash CLI mounts the project at `/home/user/project`. Reads come from the real project root, while writes stay in the overlay and are discarded after execution.
+Add `-e` (`--errexit`) when the script should stop at the first failing command.
+
+The just-bash CLI mounts the project at `/home/user/project`. Reads come from the real project root, while writes stay in the overlay and are discarded after execution. It runs without VM isolation, so it reduces host side effects but is not a full security boundary.
 
 This instruction steers behavior; it does not override system instructions, approval rules, user confirmation for destructive actions, or the client runtime sandbox.
