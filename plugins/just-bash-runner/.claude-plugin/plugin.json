@@ -1,0 +1,11 @@
+{
+  "name": "just-bash-runner",
+  "description": "Prefer just-bash when running generated or untrusted shell scripts.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Per Soderlind"
+  },
+  "homepage": "https://github.com/soderlind/just-bash-runner",
+  "repository": "https://github.com/soderlind/just-bash-runner",
+  "license": "MIT"
+}

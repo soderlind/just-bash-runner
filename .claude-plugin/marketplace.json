@@ -1,0 +1,24 @@
+{
+  "name": "just-bash-runner",
+  "owner": {
+    "name": "Per Soderlind"
+  },
+  "description": "Claude Code marketplace for the Just Bash Runner plugin.",
+  "plugins": [
+    {
+      "name": "just-bash-runner",
+      "source": "./plugins/just-bash-runner",
+      "displayName": "Just Bash Runner",
+      "description": "Prefer just-bash when running generated or untrusted shell scripts.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Per Soderlind"
+      },
+      "homepage": "https://github.com/soderlind/just-bash-runner",
+      "repository": "https://github.com/soderlind/just-bash-runner",
+      "license": "MIT",
+      "keywords": ["just-bash", "sandbox", "shell", "scripts", "agents"],
+      "category": "Productivity"
+    }
+  ]
+}
