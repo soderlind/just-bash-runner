@@ -1,0 +1,20 @@
+{
+  "name": "just-bash-runner",
+  "interface": {
+    "displayName": "Just Bash Runner"
+  },
+  "plugins": [
+    {
+      "name": "just-bash-runner",
+      "source": {
+        "source": "local",
+        "path": "./plugins/just-bash-runner"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "just-bash-runner",
+  "version": "0.1.0",
+  "description": "Steer Codex to prefer just-bash for sandboxed script execution.",
+  "author": {
+    "name": "Local developer",
+    "url": "https://github.com/soderlind"
+  },
+  "homepage": "https://github.com/soderlind/just-bash-runner",
+  "repository": "https://github.com/soderlind/just-bash-runner",
+  "license": "MIT",
+  "keywords": ["codex", "plugin", "just-bash", "sandbox", "shell"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Just Bash Runner",
+    "shortDescription": "Prefer just-bash when running scripts.",
+    "longDescription": "Adds a workflow skill that steers Codex to dry-run or execute agent-authored scripts through vercel-labs/just-bash when appropriate, while preserving normal shell usage for project tooling and real filesystem changes.",
+    "developerName": "soderlind",
+    "category": "Productivity",
+    "capabilities": ["Script Execution", "Sandboxing"],
+    "defaultPrompt": [
+      "Run this script with just-bash first.",
+      "Check this shell snippet safely.",
+      "Prefer just-bash for generated scripts."
+    ]
+  }
+}
