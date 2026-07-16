@@ -48,12 +48,26 @@ claude --plugin-dir ./plugins/just-bash-runner
 
 ## Use with GitHub Copilot
 
-Copilot does not install Codex or Claude plugins directly. This repo includes two instruction files Copilot can use:
+GitHub Copilot CLI loads skills in the same `SKILL.md` format this repo already ships, so you get a real one-command install — no manual file copying.
+
+### Install as a skill (recommended)
+
+Install straight from this repo with the cross-agent [`skills`](https://skills.sh) CLI. It auto-detects Copilot and installs the `use-just-bash-for-scripts` skill:
+
+```bash
+npx skills add soderlind/just-bash-runner
+```
+
+Add `--global` to install it for your user across all projects, or omit it to install into the current project (`.agents/skills/`). Start a fresh Copilot session so the skill is picked up. Copilot then loads the skill on demand when a task involves running generated or untrusted scripts, instead of carrying the guidance in every prompt.
+
+### No-install alternative (vendored instructions)
+
+If you prefer not to install a skill, this repo also ships two always-on instruction files Copilot reads directly from a repository:
 
 - `AGENTS.md`
 - `.github/copilot-instructions.md`
 
-Copy or keep those files in a repository where you want Copilot's agent behavior to prefer `just-bash` for generated or untrusted shell scripts.
+Copy either (or both) into a repository where you want Copilot's agent behavior to prefer `just-bash` for generated or untrusted shell scripts.
 
 ## just-bash CLI
 
