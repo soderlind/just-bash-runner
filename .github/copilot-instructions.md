@@ -6,17 +6,19 @@ Use `just-bash` first for script-like shell with pipes, redirects, heredocs, loo
 
 Use the normal shell directly for project tooling that must affect the real repository, including test, lint, build, package-manager, Git inspection, and language-specific verification commands.
 
-Check availability before relying on it:
+Run it with no install step via `npx` (or drop the prefix when it is installed globally):
 
 ```bash
-command -v just-bash
+npx just-bash -c 'echo ready' --json
 ```
 
 Common forms:
 
 ```bash
-just-bash -c '<script>' --root <workspace-root> --json
-just-bash <script-path> --root <workspace-root> --json
+npx just-bash -c '<script>' --root <workspace-root> --json
+npx just-bash <script-path> --root <workspace-root> --json
 ```
 
-Remember that just-bash mounts the project at `/home/user/project`; writes stay in the overlay and are discarded.
+Add `-e` (`--errexit`) when the script should stop at the first failing command. For an always-available binary, install it globally with `npm install -g just-bash`.
+
+Remember that just-bash mounts the project at `/home/user/project`; writes stay in the overlay and are discarded. It runs without VM isolation, so it is not a full security boundary.

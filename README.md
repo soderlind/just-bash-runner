@@ -4,6 +4,8 @@ Multi-client agent package that steers AI coding agents to prefer [vercel-labs/j
 
 It adds workflow guidance, not a hard runtime override. It tells compatible agents to dry-run suitable scripts with `just-bash` first, then use the normal shell only when real project tooling or real filesystem changes are required.
 
+[![skills.sh](https://skills.sh/b/soderlind/just-bash-runner)](https://skills.sh/soderlind/just-bash-runner)
+
 ## Install for Codex
 
 Add this Git marketplace:
@@ -71,16 +73,16 @@ Copy either (or both) into a repository where you want Copilot's agent behavior 
 
 ## just-bash CLI
 
-The plugin expects the `just-bash` CLI to be available before relying on it:
+The plugin relies on the `just-bash` CLI. It needs no install step — agents can invoke it with `npx`:
 
 ```bash
-command -v just-bash
+npx just-bash -c 'echo ready' --json
 ```
 
-Install `just-bash` separately if needed:
+For an always-available binary, install it globally instead:
 
 ```bash
-npm install -g just-bash
+command -v just-bash || npm install -g just-bash
 ```
 
 ## Behavior
@@ -99,8 +101,10 @@ It keeps normal shell execution for project tooling that must touch the real rep
 ```text
 .claude-plugin/marketplace.json
 .agents/plugins/marketplace.json
-AGENTS.md
 .github/copilot-instructions.md
+.github/workflows/validate.yml
+AGENTS.md
+scripts/validate.mjs
 plugins/just-bash-runner/.codex-plugin/plugin.json
 plugins/just-bash-runner/.claude-plugin/plugin.json
 plugins/just-bash-runner/skills/use-just-bash-for-scripts/SKILL.md

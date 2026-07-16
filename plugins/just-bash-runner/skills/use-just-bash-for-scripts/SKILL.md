@@ -15,45 +15,49 @@ This skill steers execution; it does not override higher-priority system, develo
    - Use `just-bash` first for shell snippets, generated scripts, loops, conditionals, pipes, redirects, heredocs, `find ... -exec`, `xargs`, or commands with potentially broad filesystem effects.
    - Use the normal shell directly for project tooling that must affect the real repo, such as `npm test`, `pnpm build`, `composer test`, `php -l`, `git diff`, or language-specific test/lint commands.
    - Ask before destructive host actions, even if `just-bash` would make them copy-on-write.
-2. Prefer a sandboxed dry-run:
-   - For inline scripts, run `just-bash -c '<script>' --root <workspace-root> --json`.
-   - For script files, run `just-bash <script-path> --root <workspace-root> --json`.
+2. Prefer a sandboxed dry-run. If `just-bash` is not installed globally, invoke it with `npx just-bash` (no install step required):
+   - For inline scripts, run `npx just-bash -c '<script>' --root <workspace-root> --json` (or `just-bash -c ...` when installed globally).
+   - For script files, run `npx just-bash <script-path> --root <workspace-root> --json`.
+   - Add `-e` (`--errexit`) when the script should stop at the first failing command.
    - Remember that the real project is mounted inside just-bash at `/home/user/project`; use that path or relative paths from its default cwd.
 3. Interpret the result:
    - Report `stdout`, `stderr`, and `exitCode` when relevant.
    - If the dry-run shows safe, intended behavior and real filesystem changes are required, explain the tradeoff briefly and then use the normal shell with existing approval rules.
    - If just-bash lacks a command, runtime, network access, or host integration needed for the task, say that and use the normal shell only for the minimum necessary command.
 
-## Installation Check
+## Availability
 
-Before relying on the CLI, check whether it is available:
+`just-bash` runs with no install step via `npx`:
 
 ```bash
-command -v just-bash
+npx just-bash -c 'echo ready' --json
 ```
 
-If it is missing, do not silently fall back for risky scripts. Tell the user that `just-bash` is not installed and either:
+For a faster, always-available binary, it can also be installed globally:
 
-- ask before installing/running it through npm tooling, or
-- use the normal shell only if the command is clearly low-risk and required.
+```bash
+command -v just-bash || npm install -g just-bash
+```
+
+Prefer `npx just-bash` for risky scripts rather than silently falling back to the real shell. Only use the normal shell directly when the command is clearly low-risk and required, or when neither `npx` nor a global install is available.
 
 ## Safety Notes
 
 - The just-bash CLI uses an overlay filesystem: reads come from the real project root, while writes stay in memory and are discarded after execution.
 - Network access is disabled by default unless configured in just-bash.
 - Python and JavaScript runtimes are optional capabilities in just-bash and may not be available through the CLI setup.
-- Do not present just-bash as a perfect security boundary. It reduces host side effects for suitable shell scripts, but it does not replace the agent's own sandboxing, approvals, dependency review, or user confirmation for destructive work.
+- Do not present just-bash as a perfect security boundary. It runs without VM isolation and reduces host side effects for suitable shell scripts, but it does not replace the agent's own sandboxing, approvals, dependency review, or user confirmation for destructive work.
 
 ## Useful Patterns
 
 ```bash
-just-bash -c 'grep -r "TODO" src/ | head' --root /path/to/project --json
+npx just-bash -c 'grep -r "TODO" src/ | head' --root /path/to/project --json
 ```
 
 ```bash
-just-bash ./scripts/example.sh --root /path/to/project --json
+npx just-bash ./scripts/example.sh --root /path/to/project --json
 ```
 
 ```bash
-printf '%s\n' 'find . -name "*.tmp" -delete' | just-bash --root /path/to/project --json
+printf '%s\n' 'find . -name "*.tmp" -delete' | npx just-bash --root /path/to/project --json
 ```
