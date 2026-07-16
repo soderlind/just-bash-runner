@@ -4,8 +4,6 @@ Multi-client agent package that steers AI coding agents to prefer [vercel-labs/j
 
 It adds workflow guidance, not a hard runtime override. It tells compatible agents to dry-run suitable scripts with `just-bash` first, then use the normal shell only when real project tooling or real filesystem changes are required.
 
-[![skills.sh](https://skills.sh/b/soderlind/just-bash-runner)](https://skills.sh/soderlind/just-bash-runner)
-
 ## Install for Codex
 
 Add this Git marketplace:
@@ -114,6 +112,7 @@ Both use the same tool for different goals. This project is the safety layer: it
 .github/copilot-instructions.md
 .github/workflows/validate.yml
 AGENTS.md
+CHANGELOG.md
 scripts/validate.mjs
 plugins/just-bash-runner/.codex-plugin/plugin.json
 plugins/just-bash-runner/.claude-plugin/plugin.json
