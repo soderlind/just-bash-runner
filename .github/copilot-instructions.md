@@ -19,6 +19,6 @@ npx just-bash -c '<script>' --root <workspace-root> --json
 npx just-bash <script-path> --root <workspace-root> --json
 ```
 
-Add `-e` (`--errexit`) when the script should stop at the first failing command. For an always-available binary, install it globally with `npm install -g just-bash`.
+Add `-e` (`--errexit`) when the script should stop at the first failing command. The sandbox is read-only by default; add `--allow-write` for scripts that create, edit, or delete files. For an always-available binary, install it globally with `npm install -g just-bash`.
 
-Remember that just-bash mounts the project at `/home/user/project`; writes stay in the overlay and are discarded. It runs without VM isolation, so it is not a full security boundary.
+Remember that just-bash mounts the project at `/home/user/project` and is read-only by default (writes fail with `EROFS`). With `--allow-write`, writes stay in an in-memory overlay and are discarded, so the host is never modified. It runs without VM isolation, so it is not a full security boundary.
