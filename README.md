@@ -97,6 +97,8 @@ The skill prefers `just-bash` for:
 
 It keeps normal shell execution for project tooling that must touch the real repo, such as test, lint, build, and language-specific verification commands.
 
+The skill's safety behavior has been verified against the real `just-bash` CLI — see [Skill Verification](docs/SKILL_VERIFICATION.md).
+
 ## Why just-bash (and where this fits)
 
 `just-bash` ([vercel-labs/just-bash](https://github.com/vercel-labs/just-bash)) is a bash-like interpreter with a virtual, overlay filesystem. There are two distinct ways to adopt it, and this project targets only the first:
@@ -115,6 +117,7 @@ Both use the same tool for different goals. This project is the safety layer: it
 .github/workflows/validate.yml
 AGENTS.md
 CHANGELOG.md
+docs/SKILL_VERIFICATION.md
 scripts/validate.mjs
 plugins/just-bash-runner/.codex-plugin/plugin.json
 plugins/just-bash-runner/.claude-plugin/plugin.json

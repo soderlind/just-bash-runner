@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Skill verification document (`docs/SKILL_VERIFICATION.md`) recording a
+  hands-on test of the installed skill against the real `just-bash` CLI,
+  confirming the read-only default, `--allow-write` overlay, and destructive
+  dry-run all leave the host untouched; linked from the README.
 - Zero-install invocation: `npx just-bash` is now the default form across the
   skill, `AGENTS.md`, `.github/copilot-instructions.md`, and the README, so the
   guidance works without a global install. ([#2])
