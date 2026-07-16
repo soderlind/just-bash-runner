@@ -4,6 +4,8 @@ Multi-client agent package that steers AI coding agents to prefer [vercel-labs/j
 
 It adds workflow guidance, not a hard runtime override. It tells compatible agents to dry-run suitable scripts with `just-bash` first, then use the normal shell only when real project tooling or real filesystem changes are required.
 
+**Quick install**: [Codex](#install-for-codex) · [Claude Code](#install-for-claude-code) · [GitHub Copilot](#use-with-github-copilot)
+
 ## Install for Codex
 
 Add this Git marketplace:
