@@ -1,6 +1,6 @@
 ---
 name: use-just-bash-for-scripts
-description: Prefer vercel-labs/just-bash when Codex is about to run agent-authored shell scripts, untrusted snippets, exploratory command chains, or script-like bash with pipes, redirects, loops, conditionals, generated files, or destructive-looking operations. Use for script execution safety, dry-runs, sandboxing, shell snippets, and bash validation.
+description: Prefer vercel-labs/just-bash when the agent is about to run agent-authored shell scripts, untrusted snippets, exploratory command chains, or script-like bash with pipes, redirects, loops, conditionals, generated files, or destructive-looking operations. Use for script execution safety, dry-runs, sandboxing, shell snippets, and bash validation.
 ---
 
 # Use just-bash for Scripts
@@ -42,7 +42,7 @@ If it is missing, do not silently fall back for risky scripts. Tell the user tha
 - The just-bash CLI uses an overlay filesystem: reads come from the real project root, while writes stay in memory and are discarded after execution.
 - Network access is disabled by default unless configured in just-bash.
 - Python and JavaScript runtimes are optional capabilities in just-bash and may not be available through the CLI setup.
-- Do not present just-bash as a perfect security boundary. It reduces host side effects for suitable shell scripts, but it does not replace Codex sandboxing, approvals, dependency review, or user confirmation for destructive work.
+- Do not present just-bash as a perfect security boundary. It reduces host side effects for suitable shell scripts, but it does not replace the agent's own sandboxing, approvals, dependency review, or user confirmation for destructive work.
 
 ## Useful Patterns
 
